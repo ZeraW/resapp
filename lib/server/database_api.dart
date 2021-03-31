@@ -171,7 +171,7 @@ class DatabaseService {
   }
 
   //get my restaurant
-  Stream<DocumentSnapshot> getRestaurantById(String id) {
+  Stream<DocumentSnapshot> getRestaurantById(String? id) {
     return restaurantCollection.doc(id).snapshots();
   }
 

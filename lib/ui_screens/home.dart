@@ -35,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
       {'restaurant': MultiProvider(providers: [
         StreamProvider<DocumentSnapshot?>.value(
             initialData: null,
-            value: DatabaseService().getRestaurantById(user!.restaurantId!))
+            value: DatabaseService().getRestaurantById(user!.restaurantId))
       ],child:HomeRestaurant((user!=null ? user :UserModel())!))}
     ]:[];
 
@@ -46,7 +46,12 @@ class _HomeScreenState extends State<HomeScreen> {
             .firstWhere((element) => element.keys.first == user!.type)
             .values
             .first
-        : CircularProgressIndicator();
+        : Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(),
+          ],
+        );
   }
 }
 
