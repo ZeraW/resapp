@@ -101,7 +101,7 @@ class _LoginScreenState extends State<LoginScreen> {
               SizedBox(
                 height: Dimensions.getHeight(4.0),
               ),
-             widget.type!='Restaurant'? GestureDetector(
+             widget.type=='User'? GestureDetector(
                 onTap: () {
                   Provider.of<AuthManage>(context, listen: false)
                       .toggleWidgets(currentPage: 2, type: widget.type,color: widget.color);
@@ -142,7 +142,7 @@ class _LoginScreenState extends State<LoginScreen> {
     } else {
       setState(() {
         if (phone == null || phone.isEmpty) {
-          _phoneError = "Enter a valid phone number.";
+          _phoneError = "Enter a valid Email.";
           _passwordError = '';
         } else {
           _passwordError = "Enter a valid password.";

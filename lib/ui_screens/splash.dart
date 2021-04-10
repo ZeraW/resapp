@@ -1,11 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 import 'package:provider/provider.dart';
 import 'package:resapp/server/auth.dart';
 import 'package:resapp/utils/dimensions.dart';
 import 'package:resapp/utils/utils.dart';
-
 import '../wrapper.dart';
 
 class SplashScreen extends StatefulWidget {

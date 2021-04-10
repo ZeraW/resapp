@@ -193,7 +193,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
       setState(() {
 
       });
-    } else if (phone == null || phone.isEmpty) {
+    }
+    else if (phone == null || phone.isEmpty) {
       clear();
       _phoneError = "Please enter email Address";
       setState(() {

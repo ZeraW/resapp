@@ -78,6 +78,7 @@ class ManageCitiesScreen extends StatelessWidget {
         context, MaterialPageRoute(builder: (_) => AddEditCitiesScreen(nextId: nextId.toString(),)));
   }
 }
+
 class AddEditCitiesScreen extends StatefulWidget {
   final CityModel? editCity;
   final String? nextId;

@@ -38,7 +38,7 @@ class _ContinueEditItemState extends State<ContinueEditItem> {
   Widget build(BuildContext context) {
     print('setstate');
     return Scaffold(
-      appBar: AppBar(title: Text('ADD ITEM VARIETIES')),
+      appBar: AppBar(title: Text('Edit ITEM VARIETIES')),
       body: Column(
         children: [
           Flexible(

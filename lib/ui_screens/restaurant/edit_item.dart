@@ -58,7 +58,7 @@ class _EditItemState extends State<EditItem> {
     }
 
     return Scaffold(
-      appBar: AppBar(title: Text('ADD NEW ITEM')),
+      appBar: AppBar(title: Text('Edit NEW ITEM')),
       body: Container(
         padding: EdgeInsets.symmetric(
             vertical: Dimensions.getHeight(2),
