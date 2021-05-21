@@ -5,8 +5,8 @@ import 'package:resapp/models/db_model.dart';
 import 'package:resapp/server/auth.dart';
 import 'package:resapp/server/database_api.dart';
 import 'package:resapp/ui_screens/user/restaurant_search.dart';
-import 'package:resapp/ui_screens/user/user_cart.dart';
-import 'package:resapp/ui_screens/user/user_orders.dart';
+/*import 'package:resapp/ui_screens/user/user_cart.dart';
+import 'package:resapp/ui_screens/user/user_orders.dart';*/  //todo uncomment
 import 'package:resapp/ui_widget/drawer_items.dart';
 import 'package:resapp/ui_widget/top_sheet.dart';
 import 'package:resapp/ui_widget/user/home/order_type.dart';
