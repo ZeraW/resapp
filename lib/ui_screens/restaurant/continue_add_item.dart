@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:resapp/models/db_model.dart';
@@ -56,7 +57,13 @@ class _ContinueAddItemState extends State<ContinueAddItem> {
                           setState(() {
 
                           });
-                        },
+                        },onDeleteTap: () {
+                      priceList.removeWhere((element) => element.size == selectedPrice!.size);
+                      if(priceList.length>0) selectedPrice = priceList[0];
+                      setState(() {
+
+                      });
+                    },
                         currentPrice: (price) {
                           print(price!.price);
                           selectedPrice =price;
@@ -115,8 +122,10 @@ class _ContinueAddItemState extends State<ContinueAddItem> {
       createSearchKeywordsList();
       print(widget.foodItem.keyWords);
 
+      BotToast.showLoading();
       await DatabaseService().addFood(
           newFood: widget.foodItem, imageFile: widget.image);
+      BotToast.cleanAll();
       Navigator.pop(context);
       Navigator.pop(context);
     }else {
@@ -165,7 +174,6 @@ class _VarietyWidgetState extends State<VarietyWidget> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
 

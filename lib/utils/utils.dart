@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 import 'dimensions.dart';
@@ -23,8 +26,19 @@ class MyColors {
   }
 }
 
-class EnStrings {
-  String appName = "BookingApp";
+class RandomStrings {
+
+  String _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+  Random _rnd = Random();
+
+   String get(int length) => String.fromCharCodes(Iterable.generate(
+      length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
+
+  String getRandString(int len) {
+    var random = Random.secure();
+    var values = List<int>.generate(len, (i) =>  random.nextInt(255));
+    return base64UrlEncode(values);
+  }
 }
 
 class MyTheme {
@@ -122,7 +136,7 @@ class MyStyle{
     return TextStyle(
         color: Colors.black,
         fontWeight: FontWeight.w600,
-        fontSize: Dimensions.getWidth(4.5));
+        fontSize: Dimensions.getWidth(3.6));
   }
   TextStyle textStyleBold(){
     return TextStyle(
@@ -135,6 +149,13 @@ class MyStyle{
         color: Colors.black,
         fontWeight: FontWeight.bold,
         fontSize: Dimensions.getWidth(5));
+  }
+
+  TextStyle bigWhiteBold(){
+    return TextStyle(
+        color: Colors.white,
+        fontWeight: FontWeight.bold,
+        fontSize: Dimensions.getWidth(6));
   }
 }
 

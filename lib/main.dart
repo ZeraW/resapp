@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:resapp/ui_screens/splash.dart';
 import 'package:resapp/utils/utils.dart';
+import 'package:bot_toast/bot_toast.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,10 +17,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Restaurant App',
       theme: MyTheme().buildLightTheme(),
+      builder: BotToastInit(),
+      navigatorObservers: [BotToastNavigatorObserver()],
       home: SplashScreen(),
     );
   }
 }
-
-
-

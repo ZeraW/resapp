@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
@@ -92,6 +93,7 @@ class ManageRestaurantScreen extends StatelessWidget {
             )
           : SizedBox(),
       floatingActionButton: FloatingActionButton(
+        heroTag: 'addResturant',
         onPressed: () => _increment(
             context: context, nextId: mList != null ? mList.length + 1 : 0),
         tooltip: 'Increment',
@@ -150,7 +152,6 @@ class _AddEditRestaurantScreenState extends State<AddEditRestaurantScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     if (widget.editRestaurant != null) {
       _restaurantNameController.text = widget.editRestaurant!.name.toString();
@@ -361,6 +362,7 @@ class _AddEditRestaurantScreenState extends State<AddEditRestaurantScreen> {
     }
     else {
       clear();
+      BotToast.showLoading();
       //create search keywords
       createSearchKeywordsList();
       //do request
@@ -372,13 +374,14 @@ class _AddEditRestaurantScreenState extends State<AddEditRestaurantScreen> {
           categoryList: _categoryList,
           keyWords: keyWords,
           address: restaurantAddress,
+          rate: {},
           city: selectedCity!.id);
       widget.editRestaurant == null
           ? await DatabaseService().addRestaurant(
               newRestaurant: newRestaurant, imageFile: _storedImage!)
           : await DatabaseService().updateRestaurant(
               updatedRestaurant: newRestaurant, imageFile: _storedImage);
-
+      BotToast.cleanAll();
       Navigator.pop(context);
     }
   }

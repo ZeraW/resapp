@@ -32,7 +32,6 @@ class _EditItemState extends State<EditItem> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _nameController.text = widget.foodItem.name!;
     _detailsController.text = widget.foodItem.details!;

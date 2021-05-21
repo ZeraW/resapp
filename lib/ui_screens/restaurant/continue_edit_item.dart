@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:resapp/models/db_model.dart';
@@ -29,9 +30,8 @@ class _ContinueEditItemState extends State<ContinueEditItem> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    priceList = widget.foodItem.price!;
+    priceList.addAll(widget.foodItem.price!);
     selectedPrice = widget.foodItem.price![0];
   }
   @override
@@ -66,6 +66,13 @@ class _ContinueEditItemState extends State<ContinueEditItem> {
 
                           });
                         },
+                    onDeleteTap: () {
+                      priceList.removeWhere((element) => element.size == selectedPrice!.size);
+                      if(priceList.length>0) selectedPrice = priceList[0];
+                      setState(() {
+
+                      });
+                    },
                         currentPrice: (price) {
                           print(price!.price);
                           selectedPrice =price;
@@ -123,9 +130,10 @@ class _ContinueEditItemState extends State<ContinueEditItem> {
       widget.foodItem.price =priceList;
       createSearchKeywordsList();
       print(widget.foodItem.keyWords);
-
+      BotToast.showLoading();
       await DatabaseService().updateFood(
           updatedFood: widget.foodItem, imageFile: widget.image);
+      BotToast.cleanAll();
       Navigator.pop(context);
       Navigator.pop(context);
     }else {
@@ -174,7 +182,6 @@ class _VarietyWidgetState extends State<VarietyWidget> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
 

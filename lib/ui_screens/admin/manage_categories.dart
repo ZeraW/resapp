@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
@@ -55,6 +56,7 @@ class ManageCategoriesScreen extends StatelessWidget {
             )
           : SizedBox(),
       floatingActionButton: FloatingActionButton(
+        heroTag: 'addCategory',
         onPressed: () => _increment(
             context: context, nextId: mList != null ? mList.length + 1 : 0),
         tooltip: 'Increment',
@@ -91,7 +93,6 @@ class _AddEditCategoriesScreenState extends State<AddEditCategoriesScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     if (widget.editCategory != null) {
       _categoryNameController.text = widget.editCategory!.name.toString();
@@ -203,13 +204,14 @@ class _AddEditCategoriesScreenState extends State<AddEditCategoriesScreen> {
       );
     } else {
       clear();
+      BotToast.showLoading();
 
       //do request
       CategoryModel newCategory = CategoryModel(id: widget.editCategory != null ? widget.editCategory!.id : null, name: categoryName,image:widget.editCategory?.image);
       widget.editCategory == null
           ? await DatabaseService().addCategory(newCategory: newCategory,imageFile: _storedImage!)
           : await DatabaseService().updateCategory(updatedCategory: newCategory,imageFile: _storedImage);
-
+      BotToast.cleanAll();
       Navigator.pop(context);
     }
   }

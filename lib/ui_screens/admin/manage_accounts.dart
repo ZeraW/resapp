@@ -56,6 +56,7 @@ class ManageAccountsScreen extends StatelessWidget {
       )
           : Text('No data'),
       floatingActionButton: FloatingActionButton(
+        heroTag: 'addAccount',
         onPressed: () => _increment(
             context: context, nextId: mList != null ? mList.length + 1 : 0),
         tooltip: 'Increment',

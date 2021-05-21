@@ -11,17 +11,21 @@ import '../models/db_model.dart';
 class DatabaseService {
   // Users collection reference
   final CollectionReference userCollection =
-  FirebaseFirestore.instance.collection('Users');
+      FirebaseFirestore.instance.collection('Users');
   final CollectionReference restaurantCollection =
-  FirebaseFirestore.instance.collection('Restaurant');
+      FirebaseFirestore.instance.collection('Restaurant');
   final CollectionReference categoryCollection =
-  FirebaseFirestore.instance.collection('Category');
+      FirebaseFirestore.instance.collection('Category');
   final CollectionReference citiesCollection =
-  FirebaseFirestore.instance.collection('Cities');
+      FirebaseFirestore.instance.collection('Cities');
   final CollectionReference foodCollection =
-  FirebaseFirestore.instance.collection('Food');
+      FirebaseFirestore.instance.collection('Food');
+  final CollectionReference cartCollection =
+      FirebaseFirestore.instance.collection('Cart');
+  final CollectionReference orderCollection =
+      FirebaseFirestore.instance.collection('Order');
   CollectionReference queryFoodRef =
-  FirebaseFirestore.instance.collection('Food');
+      FirebaseFirestore.instance.collection('Food');
 
 /////////////////////////////////// User ///////////////////////////////////
   //get my user
@@ -30,13 +34,16 @@ class DatabaseService {
   }
 
   Stream<List<UserModel>> getLiveUsers(String id) {
-    return userCollection.where('restaurantId', isEqualTo: id).snapshots().map(UserModel().fromQuery);
+    return userCollection
+        .where('restaurantId', isEqualTo: id)
+        .snapshots()
+        .map(UserModel().fromQuery);
   }
 
   //upload Image method
   Future uploadImageToStorage({required File file, String? id}) async {
-    firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
-        .ref('images/$id.png');
+    firebase_storage.Reference ref =
+        firebase_storage.FirebaseStorage.instance.ref('images/$id.png');
 
     firebase_storage.UploadTask task = ref.putFile(file);
 
@@ -77,7 +84,6 @@ class DatabaseService {
 
 /////////////////////////////////// User ///////////////////////////////////
 
-
   /// //////////////////////////////// City //////////////////////////////// ///
   //add new City
 
@@ -110,8 +116,8 @@ class DatabaseService {
   Future addCategory(
       {required CategoryModel newCategory, required File imageFile}) async {
     var ref = categoryCollection.doc();
-    newCategory.image = await (DatabaseService().uploadImageToStorage(
-        id: 'category/${ref.id}', file: imageFile));
+    newCategory.image = await (DatabaseService()
+        .uploadImageToStorage(id: 'category/${ref.id}', file: imageFile));
     newCategory.id = ref.id;
     return await ref.set(newCategory.toJson());
   }
@@ -119,11 +125,13 @@ class DatabaseService {
   //update existing category
   Future updateCategory(
       {required CategoryModel updatedCategory, File? imageFile}) async {
-    imageFile != null ? updatedCategory.image =
-    await (DatabaseService().uploadImageToStorage(
-        id: 'category/${updatedCategory.id}', file: imageFile)):null;
-    return await categoryCollection.doc(updatedCategory.id).update(
-        updatedCategory.toJson());
+    imageFile != null
+        ? updatedCategory.image = await (DatabaseService().uploadImageToStorage(
+            id: 'category/${updatedCategory.id}', file: imageFile))
+        : null;
+    return await categoryCollection
+        .doc(updatedCategory.id)
+        .update(updatedCategory.toJson());
   }
 
   //delete existing category
@@ -138,14 +146,13 @@ class DatabaseService {
 
 /////////////////////////////////// CATEGORY ///////////////////////////////////
 
-
-/// //////////////////////////////// Restaurant ///////////////////////////////////
+  /// //////////////////////////////// Restaurant ///////////////////////////////////
   //add new restaurant
   Future addRestaurant(
       {required RestaurantModel newRestaurant, required File imageFile}) async {
     var ref = restaurantCollection.doc();
-    newRestaurant.image = await (DatabaseService().uploadImageToStorage(
-        id: 'restaurant/${ref.id}', file: imageFile));
+    newRestaurant.image = await (DatabaseService()
+        .uploadImageToStorage(id: 'restaurant/${ref.id}', file: imageFile));
     newRestaurant.id = ref.id;
     return await ref.set(newRestaurant.toJson());
   }
@@ -153,11 +160,14 @@ class DatabaseService {
   //update existing restaurant
   Future updateRestaurant(
       {required RestaurantModel updatedRestaurant, File? imageFile}) async {
-    imageFile != null ? updatedRestaurant.image =
-    await (DatabaseService().uploadImageToStorage(
-        id: 'restaurant/${updatedRestaurant.id}', file: imageFile)):null;
-    return await restaurantCollection.doc(updatedRestaurant.id).update(
-        updatedRestaurant.toJson());
+    imageFile != null
+        ? updatedRestaurant.image = await (DatabaseService()
+            .uploadImageToStorage(
+                id: 'restaurant/${updatedRestaurant.id}', file: imageFile))
+        : null;
+    return await restaurantCollection
+        .doc(updatedRestaurant.id)
+        .update(updatedRestaurant.toJson());
   }
 
   //delete existing restaurant
@@ -170,32 +180,70 @@ class DatabaseService {
     return restaurantCollection.snapshots().map(RestaurantModel().fromQuery);
   }
 
+  // stream for live restaurant byCity
+  Stream<List<RestaurantModel>> getLiveRestaurantByCity(String cityId) {
+    return restaurantCollection
+        .where('city', isEqualTo: cityId)
+        .snapshots()
+        .map(RestaurantModel().fromQuery);
+  }
+
+  // stream for live restaurant
+  Stream<List<RestaurantModel>> getLiveRestaurantByCityAndCategory(
+      String cityId, String category) {
+    return restaurantCollection
+        .where('keyWords.city', isEqualTo: cityId)
+        .where('keyWords.$category', isEqualTo: 'true')
+        .snapshots()
+        .map(RestaurantModel().fromQuery);
+  }
+
   //get my restaurant
   Stream<DocumentSnapshot> getRestaurantById(String? id) {
     return restaurantCollection.doc(id).snapshots();
   }
 
-/// //////////////////////////////// Restaurant ///////////////////////////////////
+
+
+
+  //rate restaurant
+  Future rateRestaurant({required RestaurantModel rateRes,required int ratting}) async {
+    return await restaurantCollection.doc(rateRes.id).update({
+      'rate.${Wrapper.UID}': ratting
+    });
+  }
+  ///add item to array
+/* return await carsCollection.doc(updatedCar.id).update({
+  'upvoters': FieldValue.arrayUnion(['12345'])
+  });*/
+
+  ///remove item from array
+/* return await carsCollection.doc(updatedCar.id).update({
+  'user_fav': FieldValue.arrayRemove(['12345'])
+  });*/
+
+
+  /// //////////////////////////////// Restaurant ///////////////////////////////////
 
 /////////////////////////////////// FOOD ///////////////////////////////////
   //add new food
-  Future addFood(
-      {required FoodModel newFood, required File imageFile}) async {
+  Future addFood({required FoodModel newFood, required File imageFile}) async {
     var ref = foodCollection.doc();
-    newFood.image = await (DatabaseService().uploadImageToStorage(
-        id: 'food/${ref.id}', file: imageFile));
+    newFood.image = await (DatabaseService()
+        .uploadImageToStorage(id: 'food/${ref.id}', file: imageFile));
     newFood.id = ref.id;
     return await ref.set(newFood.toJson());
   }
 
   //update existing food
-  Future updateFood(
-      {required FoodModel updatedFood, File? imageFile}) async {
-    imageFile != null ? updatedFood.image =
-    await (DatabaseService().uploadImageToStorage(
-        id: 'food/${updatedFood.id}', file: imageFile)):null;
-    return await foodCollection.doc(updatedFood.id).update(
-        updatedFood.toJson());
+  Future updateFood({required FoodModel updatedFood, File? imageFile}) async {
+    imageFile != null
+        ? updatedFood.image = await (DatabaseService().uploadImageToStorage(
+            id: 'food/${updatedFood.id}', file: imageFile))
+        : null;
+    return await foodCollection
+        .doc(updatedFood.id)
+        .update(updatedFood.toJson());
   }
 
   //delete existing food
@@ -208,12 +256,179 @@ class DatabaseService {
     return foodCollection.snapshots().map(FoodModel().fromQuery);
   }
 
+  Future<List<FoodModel>> getFoodByListOfIds(List<String> idsList) async {
+    List<DocumentSnapshot> futureList = [];
+    for (String id in idsList) {
+      futureList.add(await foodCollection.doc(id).get());
+    }
+    //  List<FoodModel> list = futureList.map((e) => FoodModel.fromJson(e.data()!)).toList();
+    return futureList.map((e) => FoodModel.fromJson(e.data()!)).toList();
+  }
+
+  Stream<List<FoodModel>> foodByIds(List<String> idsList) {
+    return Stream.fromFuture(getFoodByListOfIds(idsList));
+  }
+
   // query for live trips
-  Stream<List<FoodModel>>  queryLiveFood({required String category,required String restaurant}) {
+  Stream<List<FoodModel>> queryLiveFood(
+      {required String category, required String restaurant}) {
+    //print('req');
     return foodCollection
         .where('keyWords.restaurant', isEqualTo: restaurant)
-        .where('keyWords.category', isEqualTo: category).snapshots().map(FoodModel().fromQuery);
+        .where('keyWords.category', isEqualTo: category)
+        .snapshots()
+        .map(FoodModel().fromQuery);
   }
 
 /////////////////////////////////// FOOD ///////////////////////////////////
- }
+  /// //////////////////////////////// CART ///////////////////////////////////
+  //add new restaurant
+  Future addCart({required CartModel newCart}) async {
+    newCart.id = FirebaseAuth.instance.currentUser!.uid;
+    return await cartCollection.doc(newCart.id).set(newCart.toJson());
+  }
+
+  ///add item to array
+/* return await carsCollection.doc(updatedCar.id).update({
+  'upvoters': FieldValue.arrayUnion(['12345'])
+  });*/
+
+  ///remove item from array
+/* return await carsCollection.doc(updatedCar.id).update({
+  'user_fav': FieldValue.arrayRemove(['12345'])
+  });*/
+
+  //delete existing cart
+  Future deleteCart() async {
+    CartModel updatedCart = CartModel(
+        id: FirebaseAuth.instance.currentUser!.uid,
+        totalCount: 0,
+        totalPrice: 0,
+        cart: []);
+    return await cartCollection
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .update(updatedCart.toJson());
+  }
+
+  //update existing restaurant
+  Future updateCart({required CartModel updatedCart}) async {
+    return await cartCollection
+        .doc(updatedCart.id)
+        .update(updatedCart.toJson());
+  }
+
+  //get my Cart
+  Stream<CartModel> get getMyCart {
+    return cartCollection
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .snapshots()
+        .map((event) => CartModel.fromJson(event.data()!));
+  }
+
+  /// //////////////////////////////// CART ///////////////////////////////////
+
+/////////////////////////////////// ORDER ///////////////////////////////////
+  //add new restaurant
+  Future addOrder({required OrderModel newOrder}) async {
+    var ref = orderCollection.doc();
+    newOrder.id = ref.id;
+    newOrder.userId = FirebaseAuth.instance.currentUser!.uid;
+    return await ref.set(newOrder.toJson());
+  }
+
+
+  //update existing restaurant
+  Future updateOrder({required OrderModel updatedOrder}) async {
+    return await orderCollection
+        .doc(updatedOrder.id)
+        .update(updatedOrder.toJson());
+  }
+
+
+  //changeOrderStatusResOnly
+  Future changeOrderStatusResOnly({required String myOrder,required String resId,required int status}) async {
+    return await orderCollection.doc(myOrder).update({
+      'orderStatus.$resId': status
+    });
+  }
+
+  //changeOrderStatusAll
+  Future changeOrderStatusAll({required String myOrder,required String resId,required int status}) async {
+    return await orderCollection.doc(myOrder).update({
+      'orderStatus.$resId': status,
+      'orderStatus.all': status
+    });
+  }
+
+
+  //get my Order user
+  Stream<List<OrderModel>>  getMyOrder(int status) {
+    if(status == 3){
+      return orderCollection
+          .where('userId', isEqualTo: FirebaseAuth.instance.currentUser!.uid).where('orderStatus.all',isEqualTo: 3)
+          .snapshots()
+          .map(OrderModel().fromQuery);
+    }else {
+      return orderCollection
+          .where('userId', isEqualTo: FirebaseAuth.instance.currentUser!.uid).where('orderStatus.all',isLessThan: 3)
+          .snapshots()
+          .map(OrderModel().fromQuery);
+    }
+
+  }
+
+
+  //get my Order restaurant
+  Stream<List<OrderModel>>  getRestaurantOrder({required String resId, required int status}) {
+
+
+    return orderCollection
+        .where('keyWords.${resId}',isEqualTo: 'true')
+        .where('orderStatus.${resId}',isEqualTo: status)
+        .snapshots()
+        .map(OrderModel().fromQuery);
+
+  }
+
+
+
+/////////////////////////////////// ORDER ///////////////////////////////////
+
+  /// //////////////////////////////// ADDRESS ///////////////////////////////////
+  //add new address
+  Future addAddress({required AddressModel newAddress}) async {
+    var ref = userCollection.doc(Wrapper.UID).collection('address').doc();
+    newAddress.id = ref.id;
+    return await ref.set(newAddress.toJson());
+  }
+
+  //update existing address
+  Future updateAddress({required AddressModel updatedAddress}) async {
+    return await userCollection
+        .doc(Wrapper.UID)
+        .collection('address')
+        .doc(updatedAddress.id)
+        .update(updatedAddress.toJson());
+  }
+
+  //delete existing address
+  Future deleteAddress({required AddressModel deleteAddress}) async {
+    return await userCollection
+        .doc(Wrapper.UID)
+        .collection('address')
+        .doc(deleteAddress.id)
+        .delete();
+  }
+
+  // stream for live address
+  Stream<List<AddressModel>> get getLiveAddress {
+    return userCollection
+        .doc(Wrapper.UID)
+        .collection('address')
+        .snapshots()
+        .map(AddressModel().fromQuery);
+  }
+
+  /// //////////////////////////////// ADDRESS ///////////////////////////////////
+
+}

@@ -1,3 +1,4 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:resapp/models/db_model.dart';
@@ -63,6 +64,7 @@ class ManageCitiesScreen extends StatelessWidget {
             )
           : SizedBox(),
       floatingActionButton: FloatingActionButton(
+        heroTag: 'addCity',
         onPressed: () => _increment(context: context,nextId: mList!=null ? mList.length+1:0),
         tooltip: 'Increment',
         backgroundColor: Colors.green.withOpacity(0.9),
@@ -94,7 +96,6 @@ class _AddEditCitiesScreenState extends State<AddEditCitiesScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     if (widget.editCity != null) {
       _cityNameController.text = widget.editCity!.name.toString();
@@ -166,11 +167,12 @@ class _AddEditCitiesScreenState extends State<AddEditCitiesScreen> {
     } else {
       clear();
       //do request
+      BotToast.showLoading();
       CityModel newCity = CityModel(id: widget.editCity != null? widget.editCity!.id:widget.nextId,name: cityName);
       widget.editCity == null
           ? await DatabaseService().addCity(newCity: newCity)
           : await DatabaseService().updateCity(updatedCity: newCity);
-
+      BotToast.cleanAll();
       Navigator.pop(context);
     }
   }

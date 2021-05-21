@@ -37,4 +37,8 @@ class Dimensions {
         ? _height * (percent / 100)
         : _getDesirableWidthX(web??percent);
   }
+
+  static width(){return _width;}
+  static height(){return _height;}
+
 }

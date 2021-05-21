@@ -15,9 +15,10 @@ import 'package:resapp/utils/utils.dart';
 import 'login.dart';
 
 class RegisterScreen extends StatefulWidget {
- final String? type;
- final Color? color;
-  RegisterScreen({this.type,this.color});
+  final String? type;
+  final Color? color;
+
+  RegisterScreen({this.type, this.color});
 
   @override
   _RegisterScreenState createState() => _RegisterScreenState();
@@ -41,7 +42,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     Future<void> _takePicture() async {
-      final imageFile = await ImagePicker().getImage(source: ImageSource.gallery, imageQuality: 80);
+      final imageFile = await ImagePicker()
+          .getImage(source: ImageSource.gallery, imageQuality: 80);
 
       if (imageFile == null) {
         return;
@@ -61,7 +63,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
           elevation: 0.0,
           leading: GestureDetector(
             onTap: () => Provider.of<AuthManage>(context, listen: false)
-                .toggleWidgets(currentPage: 1, type: widget.type,color: widget.color),
+                .toggleWidgets(
+                    currentPage: 1, type: widget.type, color: widget.color),
             child: Icon(
               Icons.chevron_left,
               color: Colors.white,
@@ -155,7 +158,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 child: ElevatedButton(
                   style: ButtonStyle(
                       backgroundColor: MaterialStateColor.resolveWith(
-                              (states) => widget.color!)),
+                          (states) => widget.color!)),
                   onPressed: () {
                     _reg(context);
                   },
@@ -178,56 +181,42 @@ class _RegisterScreenState extends State<RegisterScreen> {
   _reg(BuildContext context) async {
     String firstName = _nameController.text;
     String lastName = _lastNameController.text;
-    String phone = _phoneController.text.replaceAll(new RegExp(r"\s+\b|\b\s"), "");
+    String phone =
+        _phoneController.text.replaceAll(new RegExp(r"\s+\b|\b\s"), "");
     String password = _passwordController.text;
     String passwordConfirm = _repasswordController.text;
 
     if (firstName == null || firstName.isEmpty) {
       _nameError = "Please enter first name";
-      setState(() {
-
-      });
+      setState(() {});
     } else if (lastName == null || lastName.isEmpty) {
       clear();
       _lastNameError = "Please enter last name";
-      setState(() {
-
-      });
-    }
-    else if (phone == null || phone.isEmpty) {
+      setState(() {});
+    } else if (phone == null || phone.isEmpty) {
       clear();
       _phoneError = "Please enter email Address";
-      setState(() {
-
-      });
-    }else if(!isEmail(phone)){
+      setState(() {});
+    } else if (!isEmail(phone)) {
       clear();
       _phoneError = "Please enter Correct email Address";
-      setState(() {
-
-      });
+      setState(() {});
     } else if (password == null || password.isEmpty) {
       clear();
       _passError = "Please enter password";
-      setState(() {
-
-      });
+      setState(() {});
     } else if (passwordConfirm == null || passwordConfirm.isEmpty) {
       clear();
       _rePassError = "Please enter Password confirm";
-      setState(() {
-
-      });
-    }else if(password.length<6){
+      setState(() {});
+    } else if (password.length < 6) {
       clear();
       _passError = "Password must be 6 or more character";
     } else if (password != passwordConfirm) {
       clear();
       _passError = "Passwords don't matach";
       _rePassError = "Passwords don't matach";
-      setState(() {
-
-      });
+      setState(() {});
     } else {
       clear();
       UserModel newUser = UserModel(
@@ -240,14 +229,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
           context: context, newUser: newUser, userImage: _storedImage);
     }
   }
-  bool isEmail(String em) {
 
-    String p = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+  bool isEmail(String em) {
+    String p =
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
 
     RegExp regExp = new RegExp(p);
 
     return regExp.hasMatch(em);
   }
+
   void clear() {
     setState(() {
       _phoneError = "";

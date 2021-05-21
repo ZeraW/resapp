@@ -27,11 +27,11 @@ class _HomeRestaurantState extends State<HomeRestaurant> {
   late List<Widget> restaurantWidgets;
   RestaurantModel? restaurant;
 
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-     restaurantWidgets = [MyOrdersScreen(),StreamProvider<List<CategoryModel>?>.value(
+     restaurantWidgets = [MyOrdersScreen(widget.user.restaurantId!),StreamProvider<List<CategoryModel>?>.value(
          initialData: null,
          value: DatabaseService().getLiveCategories, child: FoodItemsScreen(widget.user.restaurantId!))];
 
@@ -135,7 +135,7 @@ class _HomeRestaurantState extends State<HomeRestaurant> {
                               }),
                               Spacer(),
                               DrawerItem(
-                                  'assets/images/application.png', 'Manage',
+                                  'assets/images/application.png', 'Edit',
                                       () {
 
                                         Navigator.push(

@@ -28,6 +28,7 @@ class _MyCard extends StatelessWidget {
                 SizedBox.fromSize(
                   size: Size(40, 40),
                   child: FloatingActionButton(
+                    heroTag: 'additem1',
                     onPressed: addItem,
                     tooltip: 'Increment',
                     backgroundColor: Colors.green.withOpacity(0.9),
@@ -183,7 +184,6 @@ class _TagsWidgetState extends State<TagsWidget> {
   List<dynamic> selectedList = [];
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     for (String item in widget.initList) {
       selectedList.add(widget.fullList.firstWhere((element) => element.id == item));

@@ -13,13 +13,14 @@ import 'admin/admin_home.dart';
 import 'restaurant/restaurant_home.dart';
 
 class HomeScreen extends StatefulWidget {
+  static String USERNAME = '';
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-   UserModel? user;
-
+  UserModel? user;
 
   @override
   Widget build(BuildContext context) {
@@ -27,32 +28,34 @@ class _HomeScreenState extends State<HomeScreen> {
 
     if (snapshot != null) {
       user = UserModel.fromJson(snapshot.data()!);
+      HomeScreen.USERNAME = user!.firstName!;
     }
 
-    List<Map<String, Widget>> homeWidget = user!=null ?[
-      {'user': HomeUser((user!=null ? user :UserModel())!)},
-      {'admin': HomeAdmin((user!=null ? user :UserModel())!)},
-      {'restaurant': MultiProvider(providers: [
-        StreamProvider<DocumentSnapshot?>.value(
-            initialData: null,
-            value: DatabaseService().getRestaurantById(user!.restaurantId))
-      ],child:HomeRestaurant((user!=null ? user :UserModel())!))}
-    ]:[];
+    List<Map<String, Widget>> homeWidget = user != null
+        ? [
+            {'User': HomeUser((user != null ? user : UserModel())!)},
+            {'admin': HomeAdmin((user != null ? user : UserModel())!)},
+            {
+              'restaurant': MultiProvider(providers: [
+                StreamProvider<DocumentSnapshot?>.value(
+                    initialData: null,
+                    value:
+                        DatabaseService().getRestaurantById(user!.restaurantId))
+              ], child: HomeRestaurant((user != null ? user : UserModel())!))
+            }
+          ]
+        : [];
 
-
-
-    return snapshot != null && user!=null
+    return snapshot != null && user != null
         ? homeWidget
             .firstWhere((element) => element.keys.first == user!.type)
             .values
             .first
         : Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircularProgressIndicator(),
-          ],
-        );
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(),
+            ],
+          );
   }
 }
-
-

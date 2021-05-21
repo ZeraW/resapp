@@ -16,7 +16,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     startSplash();
   }
@@ -24,7 +23,9 @@ class _SplashScreenState extends State<SplashScreen> {
   void startSplash() {
     Future.delayed(Duration(milliseconds: 2500), () {
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (_) =>
+          context, MaterialPageRoute(
+          settings: RouteSettings(name: 'Wrapper',),
+          builder: (_) =>
       StreamProvider<User?>.value(
           initialData:null, value: AuthService().user, child: Wrapper())));
     });
