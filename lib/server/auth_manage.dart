@@ -31,9 +31,9 @@ class AuthManage extends ChangeNotifier {
 
   Widget currentWidget() {
     if (pageState == 1) {
-      return LoginScreen(type: type,color: color,);
+      return LoginScreen(type: type,color: color,isAnonymous: false,);
     } else if (pageState == 2) {
-      return RegisterScreen(type: type,color: color,);
+      return RegisterScreen(type: type,color: color,isAnonymous: false,);
     } else {
       return ChooseLoginType();
     }

@@ -20,15 +20,15 @@ class _WrapperState extends State<Wrapper> {
   Widget build(BuildContext context) {
     final user = Provider.of<User?>(context);
     // return either the Home or Authenticate widget
-    if (user == null) {
+    if (user == null && Wrapper.UID!='temp') {
       return ChangeNotifierProvider(
           create: (context) => AuthManage(), child: RootScreen());
     } else {
-      Wrapper.UID = user.uid;
+      //Wrapper.UID = user.uid;
       return MultiProvider(providers: [
-        StreamProvider<DocumentSnapshot?>.value(
-          initialData: null,
-            value: DatabaseService().getUserById)
+        StreamProvider<UserModel?>.value(
+          initialData: UserModel(id: 'temp',firstName: 'temp',phone: '',lastName: '',logo: '',password: '',type: 'User',),
+            value: DatabaseService().getUserById2)
       ], child: HomeScreen());
     }
   }

@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:resapp/models/db_model.dart';
 import 'package:resapp/server/auth.dart';
 import 'package:resapp/server/database_api.dart';
+import 'package:resapp/ui_screens/home.dart';
+import 'package:resapp/ui_screens/login.dart';
 import 'package:resapp/ui_screens/user/restaurant_search.dart';
 /*import 'package:resapp/ui_screens/user/user_cart.dart';
 import 'package:resapp/ui_screens/user/user_orders.dart';*/  //todo uncomment
@@ -345,11 +347,16 @@ class _UserMobHomeState extends State<UserMobHome> {
                               GestureDetector(
                                 onTap: () async {
                                   /*_topModalSheetKey.currentState!.onBackPressed();*/
-                                  TopSheet.instance.hideTopSheet();
-                                  await AuthService().signOut();
+                                  /*TopSheet.instance.hideTopSheet();*/
+                                  Navigator.pop(context);
+
+                                  HomeScreen.checkIfAnonymous(context,()async{
+                                    await AuthService().signOut();
+                                  });
+
                                 },
                                 child: Text(
-                                  'Log out',
+                                  HomeScreen.USERID == 'temp' ? 'Log In':'Log out',
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: Dimensions.getWidth(4)),
@@ -372,10 +379,10 @@ class _UserMobHomeState extends State<UserMobHome> {
                                   () {
                                 Navigator.pop(context);
 
-                                Navigator.push(
+                                HomeScreen.checkIfAnonymous(context, () => Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (_) => ProfileScreen(widget.user)));
+                                        builder: (_) => ProfileScreen(widget.user))));
                               }),
                             ],
                           ),

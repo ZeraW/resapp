@@ -30,7 +30,15 @@ class DatabaseService {
 /////////////////////////////////// User ///////////////////////////////////
   //get my user
   Stream<DocumentSnapshot> get getUserById {
-    return userCollection.doc(Wrapper.UID).snapshots();
+    return userCollection.doc(FirebaseAuth.instance.currentUser!.uid).snapshots();
+  }
+
+
+  Stream<UserModel> get getUserById2 {
+    return userCollection
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .snapshots()
+        .map((event) => UserModel.fromJson(event.data()!));
   }
 
   Stream<List<UserModel>> getLiveUsers(String id) {
@@ -209,7 +217,7 @@ class DatabaseService {
   //rate restaurant
   Future rateRestaurant({required RestaurantModel rateRes,required int ratting}) async {
     return await restaurantCollection.doc(rateRes.id).update({
-      'rate.${Wrapper.UID}': ratting
+      'rate.${FirebaseAuth.instance.currentUser!.uid}': ratting
     });
   }
   ///add item to array
@@ -397,7 +405,7 @@ class DatabaseService {
   /// //////////////////////////////// ADDRESS ///////////////////////////////////
   //add new address
   Future addAddress({required AddressModel newAddress}) async {
-    var ref = userCollection.doc(Wrapper.UID).collection('address').doc();
+    var ref = userCollection.doc(FirebaseAuth.instance.currentUser!.uid).collection('address').doc();
     newAddress.id = ref.id;
     return await ref.set(newAddress.toJson());
   }
@@ -405,7 +413,7 @@ class DatabaseService {
   //update existing address
   Future updateAddress({required AddressModel updatedAddress}) async {
     return await userCollection
-        .doc(Wrapper.UID)
+        .doc(FirebaseAuth.instance.currentUser!.uid)
         .collection('address')
         .doc(updatedAddress.id)
         .update(updatedAddress.toJson());
@@ -414,7 +422,7 @@ class DatabaseService {
   //delete existing address
   Future deleteAddress({required AddressModel deleteAddress}) async {
     return await userCollection
-        .doc(Wrapper.UID)
+        .doc(FirebaseAuth.instance.currentUser!.uid)
         .collection('address')
         .doc(deleteAddress.id)
         .delete();
@@ -423,7 +431,7 @@ class DatabaseService {
   // stream for live address
   Stream<List<AddressModel>> get getLiveAddress {
     return userCollection
-        .doc(Wrapper.UID)
+        .doc(FirebaseAuth.instance.currentUser!.uid)
         .collection('address')
         .snapshots()
         .map(AddressModel().fromQuery);

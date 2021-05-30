@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:resapp/models/db_model.dart';
 import 'package:resapp/server/auth.dart';
 import 'package:resapp/server/database_api.dart';
+import 'package:resapp/ui_screens/login.dart';
 import 'package:resapp/ui_screens/user/user_home.dart';
 import 'package:resapp/utils/dimensions.dart';
 import 'package:resapp/utils/utils.dart';
@@ -14,7 +15,14 @@ import 'restaurant/restaurant_home.dart';
 
 class HomeScreen extends StatefulWidget {
   static String USERNAME = '';
+  static String USERID = '';
 
+  static checkIfAnonymous(BuildContext context,Function() fun){
+    HomeScreen.USERID == 'temp' ? Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (_) => LoginScreen(type: 'User',color: Colors.amber,isAnonymous: true,))):fun();
+  }
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -24,11 +32,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final snapshot = Provider.of<DocumentSnapshot?>(context);
+    final snapshot = Provider.of<UserModel?>(context);
 
     if (snapshot != null) {
-      user = UserModel.fromJson(snapshot.data()!);
+      user = /*UserModel.fromJson(snapshot.data()!)*/snapshot;
       HomeScreen.USERNAME = user!.firstName!;
+      HomeScreen.USERID = user!.id!;
+
     }
 
     List<Map<String, Widget>> homeWidget = user != null

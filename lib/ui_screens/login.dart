@@ -3,14 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:resapp/server/auth.dart';
 import 'package:resapp/server/auth_manage.dart';
+import 'package:resapp/ui_screens/register.dart';
 import 'package:resapp/ui_widget/textfield_widget.dart';
 import 'package:resapp/utils/dimensions.dart';
 import 'package:resapp/utils/utils.dart';
 
 class LoginScreen extends StatefulWidget {
   final String? type;
+  bool isAnonymous = false;
   final Color? color;
-  LoginScreen({this.type,this.color});
+
+  LoginScreen({this.type,this.color,required this.isAnonymous});
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -29,7 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Scaffold(
         appBar: AppBar(
           leading: GestureDetector(
-            onTap: () => Provider.of<AuthManage>(context, listen: false)
+            onTap: () => widget.isAnonymous ? Navigator.pop(context): Provider.of<AuthManage>(context, listen: false)
                 .toggleWidgets(currentPage: 0, type: widget.type,color: widget.color),
             child: Icon(
               Icons.chevron_left,
@@ -86,8 +89,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   style: ButtonStyle(
                       backgroundColor: MaterialStateColor.resolveWith(
                           (states) => widget.color!)),
-                  onPressed: () {
+                  onPressed: ()async {
+                    widget.isAnonymous ? await AuthService().signOut():'';
                     _login(context);
+                    widget.isAnonymous ? Navigator.pop(context):'';
+
                   },
                   child: Text(
                     "SIGN IN",
@@ -103,7 +109,10 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
              widget.type=='User'? GestureDetector(
                 onTap: () {
-                  Provider.of<AuthManage>(context, listen: false)
+                  widget.isAnonymous ? Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => RegisterScreen(type: 'User',color: Colors.amber,isAnonymous: true,))):Provider.of<AuthManage>(context, listen: false)
                       .toggleWidgets(currentPage: 2, type: widget.type,color: widget.color);
                 },
                 child: Center(
@@ -135,6 +144,8 @@ class _LoginScreenState extends State<LoginScreen> {
         _passwordError = '';
         _phoneError = '';
       });
+
+
       await AuthService().signInWithEmailAndPassword(
           context: context,
           email: '${_phoneController.text}.${widget.type}',

@@ -7,6 +7,7 @@ import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:resapp/models/db_model.dart';
 import 'package:resapp/server/database_api.dart';
+import 'package:resapp/ui_screens/home.dart';
 import 'package:resapp/ui_screens/user/restaurant_menu.dart';
 import 'package:resapp/ui_screens/user/restaurant_search.dart';
 import 'package:resapp/ui_widget/ratting.dart';
@@ -94,7 +95,7 @@ class RestaurantList extends StatelessWidget {
             ? count
             : restaurantList.length,
         shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
+       /* physics: const NeverScrollableScrollPhysics(),*/
         padding: EdgeInsets.symmetric(horizontal: 10),
         itemBuilder: (ctx, index) {
           return Padding(
@@ -123,7 +124,7 @@ class RestaurantList extends StatelessWidget {
 
               },
               onRateTap: () {
-                DoRate().rate(context,restaurantList[index]);
+                HomeScreen.checkIfAnonymous(context, () => DoRate().rate(context,restaurantList[index]));
               },
               title: '${restaurantList[index].name}',
               image: '${restaurantList[index].image}',

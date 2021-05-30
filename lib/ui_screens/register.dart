@@ -16,9 +16,11 @@ import 'login.dart';
 
 class RegisterScreen extends StatefulWidget {
   final String? type;
+  bool isAnonymous = false;
+
   final Color? color;
 
-  RegisterScreen({this.type, this.color});
+  RegisterScreen({this.type, this.color,required this.isAnonymous});
 
   @override
   _RegisterScreenState createState() => _RegisterScreenState();
@@ -159,8 +161,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   style: ButtonStyle(
                       backgroundColor: MaterialStateColor.resolveWith(
                           (states) => widget.color!)),
-                  onPressed: () {
+                  onPressed: () async{
+
+                    widget.isAnonymous ? await AuthService().signOut():'';
                     _reg(context);
+                    if(widget.isAnonymous ){Navigator.pop(context); Navigator.pop(context);}
                   },
                   child: Text(
                     "SIGN UP",

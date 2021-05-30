@@ -1,9 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 import 'package:resapp/server/auth_manage.dart';
 import 'package:resapp/utils/dimensions.dart';
 import 'package:resapp/utils/utils.dart';
+import 'package:resapp/wrapper.dart';
 
 class RootScreen extends StatefulWidget {
   @override
@@ -27,7 +29,12 @@ class _RootScreenState extends State<RootScreen> {
   }
 }
 
-class ChooseLoginType extends StatelessWidget {
+class ChooseLoginType extends StatefulWidget {
+  @override
+  _ChooseLoginTypeState createState() => _ChooseLoginTypeState();
+}
+
+class _ChooseLoginTypeState extends State<ChooseLoginType> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,9 +65,11 @@ class ChooseLoginType extends StatelessWidget {
                   ),
                   SizedBox(height: 15,),
                   GestureDetector(
-                    onTap: () {
-                      Provider.of<AuthManage>(context, listen: false)
-                          .toggleWidgets(currentPage: 1, type: "User",color: Colors.amber);
+                    onTap: () async{
+                     /* Provider.of<AuthManage>(context, listen: false)
+                          .toggleWidgets(currentPage: 1, type: "User",color: Colors.amber);*/
+
+                      await FirebaseAuth.instance.signInAnonymously();
                     },
 
                     child: Container(
