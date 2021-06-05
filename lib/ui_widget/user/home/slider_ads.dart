@@ -86,7 +86,7 @@ class SliderAds extends StatelessWidget {
   }
   void updateDataInList(List<FoodModel> data) {
     final _random = new Random();
-    listToShow = new List.generate(3, (_) => data[_random.nextInt(data.length)]);
+    listToShow = data!=null && data.length>0? new List.generate(3, (_) => data[_random.nextInt(data.length)]) : [];
   }
 }
 

@@ -35,7 +35,7 @@ class RestaurantNearYou extends StatelessWidget {
               width: Dimensions.getWidth(6),
             ),
             Text(
-              'Restaurants Near You',
+              'Recommended Restaurant',
               style: MyStyle().whiteStyleW600(),
             ),
             Spacer(),

@@ -203,14 +203,14 @@ class _TagsWidgetState extends State<TagsWidget> {
           alignment: WrapAlignment.start,
           children: selectedList
               .map((item) =>
-                _TagItem( //todo solve the name problem ( find a way to pass it )
+                _TagItem(
                     tag: item.name,
                     onTap: () {
                       setState(() {
-                        selectedList           //todo solve the id problem ( find a way to pass it )
+                        selectedList
                             .removeWhere((element) => element.id == item.id);
                         List<String> oo = selectedList
-                            .map((e) => e.id)  //todo solve the id problem ( find a way to pass it )
+                            .map((e) => e.id)
                             .cast<String>()
                             .toList();
                         widget.onChanged(oo);
@@ -235,7 +235,7 @@ class _TagsWidgetState extends State<TagsWidget> {
           initialSelectedValues: selectedList,
         );
       },
-    );                                        //todo solve the id problem ( find a way to pass it )
+    );
     List<String> oo = selectedValues.map((e) => e.id).cast<String>().toList();
     widget.onChanged(oo);
 

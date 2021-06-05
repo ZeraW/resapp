@@ -8,12 +8,14 @@ import 'package:resapp/models/db_model.dart';
 import 'package:resapp/server/database_api.dart';
 import 'package:resapp/server/menu_manage.dart';
 import 'package:resapp/ui_screens/restaurant/food_items.dart';
-/*import 'package:resapp/ui_screens/user/user_cart.dart';*/  //todo uncomment
+import 'package:resapp/ui_screens/user/user_cart.dart';
 import 'package:resapp/ui_widget/appbar_search.dart';
 import 'package:resapp/ui_widget/restaurant/restaurant_items.dart';
 import 'package:resapp/ui_widget/show_cart.dart';
 import 'package:resapp/utils/responsive.dart';
 import 'package:resapp/utils/utils.dart';
+
+import '../home.dart';
 
 class MenuRestaurant extends StatelessWidget {
   @override
@@ -163,24 +165,31 @@ class MenuList extends StatelessWidget {
                       food: food,
 
                       add: (price) async {
-                     /* await menu.addItemToCart(food,mCart,price);
-                         ShowCart(context).showCartDialog(onTap: (){
-                           BotToast.removeAll('cart');
-                           Navigator.push(
-                               context,
-                               MaterialPageRoute(
-                                   builder: (_) => UserCart()));
-                         });*/ //todo uncomment
+
+                        HomeScreen.checkIfAnonymous(context,()async{
+                          await menu.addItemToCart(food,mCart,price);
+                          ShowCart(context).showCartDialog(onTap: (){
+                            BotToast.removeAll('cart');
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => UserCart()));
+                          });
+                        });
+
                       },
                       remove: (price) {
-                       /* menu.removeFromCart(food,mCart,price);
-                        ShowCart(context).showCartDialog(onTap: (){
-                          BotToast.removeAll('cart');
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (_) => UserCart()));
-                        });*/
+                        HomeScreen.checkIfAnonymous(context,()async{
+                          menu.removeFromCart(food,mCart,price);
+                          ShowCart(context).showCartDialog(onTap: (){
+                            BotToast.removeAll('cart');
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => UserCart()));
+                          });
+                        });
+
                       },
                       currentPrice: (price) {
                       },);

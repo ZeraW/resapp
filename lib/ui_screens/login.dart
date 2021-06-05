@@ -13,7 +13,7 @@ class LoginScreen extends StatefulWidget {
   bool isAnonymous = false;
   final Color? color;
 
-  LoginScreen({this.type,this.color,required this.isAnonymous});
+  LoginScreen({this.type, this.color, required this.isAnonymous});
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -32,8 +32,10 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Scaffold(
         appBar: AppBar(
           leading: GestureDetector(
-            onTap: () => widget.isAnonymous ? Navigator.pop(context): Provider.of<AuthManage>(context, listen: false)
-                .toggleWidgets(currentPage: 0, type: widget.type,color: widget.color),
+            onTap: () => widget.isAnonymous
+                ? Navigator.pop(context)
+                : Provider.of<AuthManage>(context, listen: false).toggleWidgets(
+                    currentPage: 0, type: widget.type, color: widget.color),
             child: Icon(
               Icons.chevron_left,
               color: Colors.white,
@@ -89,11 +91,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   style: ButtonStyle(
                       backgroundColor: MaterialStateColor.resolveWith(
                           (states) => widget.color!)),
-                  onPressed: ()async {
-                    widget.isAnonymous ? await AuthService().signOut():'';
+                  onPressed: () async {
+                    widget.isAnonymous ? await AuthService().signOut() : '';
                     _login(context);
-                    widget.isAnonymous ? Navigator.pop(context):'';
-
+                    widget.isAnonymous ? Navigator.pop(context) : '';
                   },
                   child: Text(
                     "SIGN IN",
@@ -107,24 +108,35 @@ class _LoginScreenState extends State<LoginScreen> {
               SizedBox(
                 height: Dimensions.getHeight(4.0),
               ),
-             widget.type=='User'? GestureDetector(
-                onTap: () {
-                  widget.isAnonymous ? Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (_) => RegisterScreen(type: 'User',color: Colors.amber,isAnonymous: true,))):Provider.of<AuthManage>(context, listen: false)
-                      .toggleWidgets(currentPage: 2, type: widget.type,color: widget.color);
-                },
-                child: Center(
-                  child: Text(
-                    "Sign up new account",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w800,
-                        fontSize: Dimensions.getWidth(4.0)),
-                  ),
-                ),
-              ):SizedBox(),
+              widget.type == 'User'
+                  ? GestureDetector(
+                      onTap: () {
+                        widget.isAnonymous
+                            ? Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => RegisterScreen(
+                                          type: 'User',
+                                          color: Colors.amber,
+                                          isAnonymous: true,
+                                        )))
+                            : Provider.of<AuthManage>(context, listen: false)
+                                .toggleWidgets(
+                                    currentPage: 2,
+                                    type: widget.type,
+                                    color: widget.color);
+                      },
+                      child: Center(
+                        child: Text(
+                          "Sign up new account",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w800,
+                              fontSize: Dimensions.getWidth(4.0)),
+                        ),
+                      ),
+                    )
+                  : SizedBox(),
             ],
           ),
         ),
@@ -144,7 +156,6 @@ class _LoginScreenState extends State<LoginScreen> {
         _passwordError = '';
         _phoneError = '';
       });
-
 
       await AuthService().signInWithEmailAndPassword(
           context: context,

@@ -43,7 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     List<Map<String, Widget>> homeWidget = user != null
         ? [
-            {'User': HomeUser((user != null ? user : UserModel())!)},
+            {'User': HomeUser((user != null ? user : UserModel(id: 'temp',firstName: 'temp',type: 'User'))!)},
             {'admin': HomeAdmin((user != null ? user : UserModel())!)},
             {
               'restaurant': MultiProvider(providers: [
@@ -56,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ]
         : [];
 
-    return snapshot != null && user != null
+    return  user != null
         ? homeWidget
             .firstWhere((element) => element.keys.first == user!.type)
             .values

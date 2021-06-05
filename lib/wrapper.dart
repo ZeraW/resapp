@@ -28,6 +28,7 @@ class _WrapperState extends State<Wrapper> {
       return MultiProvider(providers: [
         StreamProvider<UserModel?>.value(
           initialData: UserModel(id: 'temp',firstName: 'temp',phone: '',lastName: '',logo: '',password: '',type: 'User',),
+            catchError: (_, __) => null,
             value: DatabaseService().getUserById2)
       ], child: HomeScreen());
     }

@@ -7,8 +7,8 @@ import 'package:resapp/server/database_api.dart';
 import 'package:resapp/ui_screens/home.dart';
 import 'package:resapp/ui_screens/login.dart';
 import 'package:resapp/ui_screens/user/restaurant_search.dart';
-/*import 'package:resapp/ui_screens/user/user_cart.dart';
-import 'package:resapp/ui_screens/user/user_orders.dart';*/  //todo uncomment
+import 'package:resapp/ui_screens/user/user_cart.dart';
+import 'package:resapp/ui_screens/user/user_orders.dart';
 import 'package:resapp/ui_widget/drawer_items.dart';
 import 'package:resapp/ui_widget/top_sheet.dart';
 import 'package:resapp/ui_widget/user/home/order_type.dart';
@@ -399,19 +399,20 @@ class _UserMobHomeState extends State<UserMobHome> {
                               DrawerItem(
                                   'assets/images/scooter.png', 'My Order', () {
                                 Navigator.pop(context);
-                              /*  Navigator.push(
+
+                                HomeScreen.checkIfAnonymous(context, () => Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (_) => UserOrders()));*/ //todo uncomment
+                                        builder: (_) => UserOrders())));
+
                               }),
                               Spacer(),
                               DrawerItem('assets/images/grocery.png', 'Cart',
                                   () {
-                                    /*Navigator.push(
+                                    HomeScreen.checkIfAnonymous(context, () => Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (_) => UserCart()));*/ //todo uncomment
-
+                                            builder: (_) => UserCart())));
                               }),
                             ],
                           ),
@@ -433,7 +434,7 @@ class _UserMobHomeState extends State<UserMobHome> {
               child: Row(
                 children: [
                   Text(
-              mCityList!=null ?'${mCityList.firstWhere((element) => element.id == selectedCity).name}':'',
+              mCityList!=null ?'${mCityList.firstWhere((element) => element.id == selectedCity,orElse: () =>CityModel(name: 'null') ).name}':'',
                     style: MyStyle().whiteStyleW600(),
                   ),
                   SizedBox(

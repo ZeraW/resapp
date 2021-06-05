@@ -30,8 +30,8 @@ class _HomeRestaurantState extends State<HomeRestaurant> {
 
   @override
   void initState() {
-    super.initState();                    //todo uncomment
-     restaurantWidgets = [MyOrdersScreen(/*widget.user.restaurantId!*/),StreamProvider<List<CategoryModel>?>.value(
+    super.initState();
+     restaurantWidgets = [MyOrdersScreen(widget.user.restaurantId!),StreamProvider<List<CategoryModel>?>.value(
          initialData: null,
          value: DatabaseService().getLiveCategories, child: FoodItemsScreen(widget.user.restaurantId!))];
 

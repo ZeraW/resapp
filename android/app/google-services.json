@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "323347341663",
-    "project_id": "resturant-app-eb35e",
-    "storage_bucket": "resturant-app-eb35e.appspot.com"
+    "project_number": "69415162293",
+    "project_id": "restaurant-118eb",
+    "storage_bucket": "restaurant-118eb.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:323347341663:android:2f800d23dceb9957e416ea",
+        "mobilesdk_app_id": "1:69415162293:android:2df61d4ddd5f0bce9209fc",
         "android_client_info": {
           "package_name": "com.example.resapp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "323347341663-8l354lcsd1fa1obosfncf7o19hu0rknt.apps.googleusercontent.com",
+          "client_id": "69415162293-i0uh8neumnfpi6mktekdq9etb7r8v9ib.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCq4aWXoXrYIvXYgrB-L_B3M8pB4KBGUL8"
+          "current_key": "AIzaSyDtcWZLVZGTSJuIAe710IrJ7Dx01AGMZGA"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "323347341663-8l354lcsd1fa1obosfncf7o19hu0rknt.apps.googleusercontent.com",
+              "client_id": "69415162293-i0uh8neumnfpi6mktekdq9etb7r8v9ib.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
