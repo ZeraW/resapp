@@ -37,7 +37,12 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
           initialData: null,
           value: DatabaseService()
               .getRestaurantOrder(resId: widget.resId, status: 2),
-          child: DeliveredOrders(widget.resId))
+          child: DeliveredOrders(widget.resId)),
+      StreamProvider<List<OrderModel>?>.value(
+          initialData: null,
+          value: DatabaseService()
+              .getRestaurantOrder(resId: widget.resId, status: 3),
+          child: DeliveredOrders(widget.resId)),
     ];
 
     return Column(
@@ -130,17 +135,17 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                         flex: 1,
                         child: InkWell(
                           overlayColor:
-                              MyColors.materialColor(Colors.amberAccent),
+                          MyColors.materialColor(Colors.amberAccent),
                           borderRadius: BorderRadius.only(
                               topRight: Radius.circular(10),
                               bottomRight: Radius.circular(10)),
                           onTap: currentPage == 2
                               ? null
                               : () {
-                                  setState(() {
-                                    currentPage = 2;
-                                  });
-                                },
+                            setState(() {
+                              currentPage = 2;
+                            });
+                          },
                           child: Container(
                               alignment: Alignment.center,
                               padding: EdgeInsets.symmetric(
@@ -149,10 +154,37 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                                   ? Colors.amber
                                   : Colors.transparent,
                               child: Text(
+                                'In Delivery',
+                                style: MyStyle().whiteStyleW600(),
+                              )),
+                        )),
+                    VerticalDivider(
+                        color: Colors.white, thickness: 1, width: 0),
+                    Flexible(
+                        fit: FlexFit.tight,
+                        flex: 1,
+                        child: InkWell(
+                          overlayColor:
+                          MyColors.materialColor(Colors.amberAccent),
+                          onTap: currentPage == 3
+                              ? null
+                              : () {
+                            setState(() {
+                              currentPage = 3;
+                            });
+                          },
+                          child: Container(
+                              alignment: Alignment.center,
+                              padding: EdgeInsets.symmetric(
+                                  vertical: Dimensions.getHeight(2.5)),
+                              color: currentPage == 3
+                                  ? Colors.amber
+                                  : Colors.transparent,
+                              child: Text(
                                 'Delivered',
                                 style: MyStyle().whiteStyleW600(),
                               )),
-                        ))
+                        )),
                   ],
                 ),
               ),
@@ -312,8 +344,14 @@ class _OrderDetailsState extends State<OrderDetails> {
                 child: OnClick(
                     child: Center(child: Text('${orderStatusX(currentStatus)}',style: MyStyle().bigBold(),)),
                     color: Colors.amberAccent,
-                    onTap: () {
-                      updateStatus(currentStatus);
+                    onTap: () async{
+
+                      if(currentStatus==0){
+                        await DatabaseService().updateResReport(price: cartModel2.totalPrice!,resId: widget.resId);
+                      }
+                      currentStatus!=3 ?updateStatus(currentStatus):null;
+
+
                     })),
           )
         ],
@@ -350,7 +388,7 @@ class _OrderDetailsState extends State<OrderDetails> {
     }else if(status==2){
       return'Delivered ?';
     }else{
-      return'';
+      return'Delivered';
     }
   }
 

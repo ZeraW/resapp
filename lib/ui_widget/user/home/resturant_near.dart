@@ -44,10 +44,12 @@ class RestaurantNearYou extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        settings: RouteSettings(name: 'SearchRestaurant',),
+                        settings: RouteSettings(
+                          name: 'SearchRestaurant',
+                        ),
                         builder: (_) => SearchRestaurant(
                             mCityList: mCityList,
-                            restaurantList: restaurantList)));
+                            restaurantList: restaurantList,searchText: '',)));
               },
               child: Container(
                 decoration: BoxDecoration(
@@ -95,44 +97,73 @@ class RestaurantList extends StatelessWidget {
             ? count
             : restaurantList.length,
         shrinkWrap: true,
-       /* physics: const NeverScrollableScrollPhysics(),*/
+        /* physics: const NeverScrollableScrollPhysics(),*/
         padding: EdgeInsets.symmetric(horizontal: 10),
         itemBuilder: (ctx, index) {
-          return Padding(
-            padding: EdgeInsets.symmetric(vertical: 10),
-            child: RestaurantUserCard(
-              onTap: () {
-                //popup a attachments toast
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) => MultiProvider(providers: [
-                              StreamProvider<DocumentSnapshot?>.value(
-                                  initialData: null,
-                                  value: DatabaseService().getRestaurantById(
-                                      restaurantList[index].id)),
-                          StreamProvider<List<FoodModel>?>.value(
-                              initialData: null,
-                              value: DatabaseService().foodByIds(['u0FLyUkNN8js0dCMiSoT','0GbU3R8nN1IaGx8NmtYa'])),
-                              StreamProvider<List<CategoryModel>?>.value(
-                                  initialData: null,
-                                  value: DatabaseService().getLiveCategories),
-                          StreamProvider<CartModel>.value(
-                              initialData: CartModel(),
-                              value: DatabaseService().getMyCart)
-                            ], child: MenuRestaurant())));
-
-              },
-              onRateTap: () {
-                HomeScreen.checkIfAnonymous(context, () => DoRate().rate(context,restaurantList[index]));
-              },
-              title: '${restaurantList[index].name}',
-              image: '${restaurantList[index].image}',
-              address:
-                  '${restaurantList[index].address},${mCityList.firstWhere((element) => element.id == restaurantList[index].city).name}',
-              rate: '${restaurantList[index].getRate()}',
-              rateCount:  '${restaurantList[index].getRateCount()}',
-            ),
+          return Row(
+            children: [
+              Responsive.isDesktop()
+                  ? SizedBox(
+                      width: 250,
+                    )
+                  : SizedBox(),
+              Expanded(
+                child: PhysicalModel(
+                  color: Responsive.isDesktop() ?Colors.white:MyColors().mainColor,
+                  elevation: Responsive.isDesktop() ?0.5:0,
+                  shadowColor: Colors.grey,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    child: RestaurantUserCard(
+                      onTap: () {
+                        //popup a attachments toast
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => MultiProvider(providers: [
+                                      StreamProvider<DocumentSnapshot?>.value(
+                                          initialData: null,
+                                          value: DatabaseService()
+                                              .getRestaurantById(
+                                                  restaurantList[index].id)),
+                                      StreamProvider<List<FoodModel>?>.value(
+                                          initialData: null,
+                                          value: DatabaseService().foodByIds([
+                                            'u0FLyUkNN8js0dCMiSoT',
+                                            '0GbU3R8nN1IaGx8NmtYa'
+                                          ])),
+                                      StreamProvider<
+                                              List<CategoryModel>?>.value(
+                                          initialData: null,
+                                          value: DatabaseService()
+                                              .getLiveCategories),
+                                      StreamProvider<CartModel>.value(
+                                          initialData: CartModel(),
+                                          value: DatabaseService().getMyCart)
+                                    ], child: MenuRestaurant())));
+                      },
+                      onRateTap: () {
+                        HomeScreen.checkIfAnonymous(
+                            context,
+                            () =>
+                                DoRate().rate(context, restaurantList[index]));
+                      },
+                      title: '${restaurantList[index].name}',
+                      image: '${restaurantList[index].image}',
+                      address:
+                          '${restaurantList[index].address},${mCityList.firstWhere((element) => element.id == restaurantList[index].city).name}',
+                      rate: '${restaurantList[index].getRate()}',
+                      rateCount: '${restaurantList[index].getRateCount()}',
+                    ),
+                  ),
+                ),
+              ),
+              Responsive.isDesktop()
+                  ? SizedBox(
+                      width: 250,
+                    )
+                  : SizedBox(),
+            ],
           );
         });
   }

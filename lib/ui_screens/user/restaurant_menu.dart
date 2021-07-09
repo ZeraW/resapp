@@ -36,8 +36,18 @@ class MenuRestaurant extends StatelessWidget {
                       restaurant:
                           RestaurantModel.fromJson(restaurantData.data()!)),
                   child: UserMobMenu()),
-              tablet: UserWebMenu(),
-              desktop: UserWebMenu())
+              tablet:ChangeNotifierProvider(
+                  create: (context) => MenuManage(
+                      allCategory: mCategoryList,
+                      restaurant:
+                      RestaurantModel.fromJson(restaurantData.data()!)),
+                  child: UserMobMenu()),
+              desktop: ChangeNotifierProvider(
+                  create: (context) => MenuManage(
+                      allCategory: mCategoryList,
+                      restaurant:
+                      RestaurantModel.fromJson(restaurantData.data()!)),
+                  child: UserMobMenu()),)
           : SizedBox(),
     );
   }
@@ -153,7 +163,7 @@ class MenuList extends StatelessWidget {
             FoodModel food = menu.searchList[index];
 
             return Padding(
-              padding: EdgeInsets.symmetric(vertical: 10),
+              padding: EdgeInsets.symmetric(vertical: 10,horizontal: Responsive.isDesktop()?250:0),
               child: StatefulBuilder(
                 builder: (context, setState) {
                   return RestaurantMenuItem(

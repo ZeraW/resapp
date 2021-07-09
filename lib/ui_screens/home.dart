@@ -35,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final snapshot = Provider.of<UserModel?>(context);
 
     if (snapshot != null) {
-      user = /*UserModel.fromJson(snapshot.data()!)*/snapshot;
+      user = snapshot;
       HomeScreen.USERNAME = user!.firstName!;
       HomeScreen.USERID = user!.id!;
 

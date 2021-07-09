@@ -45,7 +45,7 @@ class _UserAddressState extends State<UserAddress> {
                 child: AddressList(widget.newOrder),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+                padding: EdgeInsets.symmetric(vertical: 8, horizontal: Responsive.isDesktop()?250:20),
                 child: ListTile(
                   tileColor: MyColors().mainColor.withBlue(65),
                   onTap: () {
@@ -203,7 +203,7 @@ class _AddressListState extends State<AddressList> {
                   setState(() {});
                 },
                 child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 10),
+                  padding: EdgeInsets.symmetric(vertical: 10,horizontal: Responsive.isDesktop()?250:0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [

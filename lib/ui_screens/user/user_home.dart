@@ -14,6 +14,7 @@ import 'package:resapp/ui_widget/top_sheet.dart';
 import 'package:resapp/ui_widget/user/home/order_type.dart';
 import 'package:resapp/ui_widget/user/home/resturant_near.dart';
 import 'package:resapp/ui_widget/user/home/slider_ads.dart';
+import 'package:resapp/ui_widget/user/home/web_appbar.dart';
 import 'package:resapp/utils/dimensions.dart';
 import 'package:resapp/utils/responsive.dart';
 import 'package:resapp/utils/utils.dart';
@@ -33,267 +34,225 @@ class HomeUser extends StatelessWidget {
               initialData: null,
               value: DatabaseService().getLiveCities,
               child: UserMobHome(user)),
-          tablet: UserWebHome(),
-          desktop: UserWebHome()),
+          tablet: StreamProvider<List<CityModel>?>.value(
+              initialData: null,
+              value: DatabaseService().getLiveCities,
+              child: UserWebHome(user)),
+          desktop:  StreamProvider<List<CityModel>?>.value(
+              initialData: null,
+              value: DatabaseService().getLiveCities,
+              child: UserWebHome(user))),
     );
   }
 }
 
 class UserWebHome extends StatelessWidget {
-  final TextEditingController controller = new TextEditingController();
 
+  final TextEditingController controller = new TextEditingController();
+  UserModel user;
+  UserWebHome(this.user);
   @override
   Widget build(BuildContext context) {
+    final mCityList = Provider.of<List<CityModel>?>(context);
+
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              color: Colors.amber,
-              child: Row(
-                children: [
-                  Spacer(),
-                  Image.asset(
-                    'assets/images/logo.png',
-                    width: 80,
-                    height: 80,
-                  ),
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Text(
-                    'FOOD',
-                    style: TextStyle(
-                        fontSize: 45,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  Spacer(),
-                  Spacer(),
-                  Spacer(),
-                  Spacer(),
-                  Text(
-                    'All Restaurant',
-                    style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600),
-                  ),
-                  SizedBox(
-                    width: 40,
-                  ),
-                  Text(
-                    'Profile',
-                    style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600),
-                  ),
-                  SizedBox(
-                    width: 40,
-                  ),
-                  Text(
-                    'My Orders',
-                    style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600),
-                  ),
-                  SizedBox(
-                    width: 40,
-                  ),
-                  Text(
-                    'Cart',
-                    style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600),
-                  ),
-                  Spacer(),
-                ],
-              ),
-            ),
-            Container(width: Responsive.width(context, 100),
-              padding: EdgeInsets.only(bottom: 10),
-              child: Stack(
-                children: [
-                  Container(
-                    color: MyColors().mainColor,
-                    child: Row(
-                      children: [
-                        Image.asset(
-                          'assets/images/right.png',
-                          scale: 1.4,
-                        ),
-                        Spacer(),
-                        Image.asset(
-                          'assets/images/left.png',
-                          scale: 1.0,
-                        )
-                      ],
-                    ),
-                  ),
-                  Positioned(
-                    top: 0,
-                    bottom: 0,
-                    right: 0,
-                    left: 0,
-                    child: Transform.scale(
-                      scale: 0.85,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+      body: Scrollbar(
+        isAlwaysShown: true,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              WebAppBar(user),
+              Container(width: Responsive.width(context, 100),
+                padding: EdgeInsets.only(bottom: 10),
+                child: Stack(
+                  children: [
+                    Container(
+                      color: MyColors().mainColor,
+                      child: Row(
                         children: [
-                          SizedBox(
-                            height: Dimensions.getHeight(2),
+                          Image.asset(
+                            'assets/images/right.png',
+                            scale: 1.4,
                           ),
-                          Center(
-                            child: Text(
-                              'Order Food Online In Egypt',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 50),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(vertical: 40),
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: Responsive.width(context, 12)),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Expanded(
-                                    flex: 14,
-                                    child: Container(
-                                      height: Responsive.height(context, 9),
-                                      decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(5),
-                                          border: Border.all(
-                                              color: Colors.amber, width: 1)),
-                                      margin: EdgeInsets.symmetric(
-                                          horizontal:
-                                              Responsive.width(context, 3)),
-                                      child: Row(
-                                        children: [
-                                          SizedBox(
-                                            width: 10,
-                                          ),
-                                          Icon(
-                                            Icons.search,
-                                            size: 30,
-                                          ),
-                                          SizedBox(
-                                            width: 10,
-                                          ),
-                                          Expanded(
-                                            child: Center(
-                                              child: TextFormField(
-                                                  style: TextStyle(color: Colors.black,),
-                                                  // maxLength: maxLength,
-                                                  controller: controller,
-                                                  validator: (value) {
-                                                    if (value!.isEmpty) {
-                                                      return "Please Enter a valid text";
-                                                    }
-                                                    return null;
-                                                  },
-                                                  //controller: _controller,
-                                                  maxLines: 1,
-                                                  //onChanged: onChange,
-                                                  keyboardType:
-                                                      TextInputType.text,
-                                                  decoration: InputDecoration(
-                                                    hintText:
-                                                        "What'd you like to eat today?",
-                                                    focusedBorder:
-                                                        InputBorder.none,
-                                                    enabledBorder:
-                                                        InputBorder.none,
-                                                    errorBorder:
-                                                        InputBorder.none,
-                                                    disabledBorder:
-                                                        InputBorder.none,
-                                                    errorStyle: TextStyle(
-                                                        color: Theme.of(context)
-                                                            .accentColor,
-                                                        fontWeight:
-                                                            FontWeight.w500),
-                                                    fillColor: Colors.black,
-                                                  )),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 3,
-                                    child: SizedBox(
-                                      height: Responsive.height(context, 9),
-                                      child: ElevatedButton(
-                                        onPressed: () {},
-                                        child: Text(
-                                          "Let's Go",
-                                          style: TextStyle(fontSize: 25),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                        style: ButtonStyle(
-                                            backgroundColor:
-                                                MyColors.materialColor(
-                                                    Colors.amber),
-                                            foregroundColor:
-                                                MyColors.materialColor(
-                                                    Colors.white)),
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: Dimensions.getHeight(2),
-                          ),
+                          Spacer(),
+                          Image.asset(
+                            'assets/images/left.png',
+                            scale: 1.0,
+                          )
                         ],
                       ),
                     ),
-                  ),
-                ],
+                    Positioned(
+                      top: 0,
+                      bottom: 0,
+                      right: 0,
+                      left: 0,
+                      child: Transform.scale(
+                        scale: 0.85,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              height: Dimensions.getHeight(2),
+                            ),
+                            Center(
+                              child: Text(
+                                'Order Food Online In Egypt',
+                                style:
+                                    TextStyle(color: Colors.white, fontSize: 50),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(vertical: 40),
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: Responsive.width(context, 12)),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Expanded(
+                                      flex: 14,
+                                      child: Container(
+                                        height: Responsive.height(context, 9),
+                                        decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            border: Border.all(
+                                                color: Colors.amber, width: 1)),
+                                        margin: EdgeInsets.symmetric(
+                                            horizontal:
+                                                Responsive.width(context, 3)),
+                                        child: Row(
+                                          children: [
+                                            SizedBox(
+                                              width: 10,
+                                            ),
+                                            Icon(
+                                              Icons.search,
+                                              size: 30,
+                                            ),
+                                            SizedBox(
+                                              width: 10,
+                                            ),
+                                            Expanded(
+                                              child: Center(
+                                                child: TextFormField(
+                                                    style: TextStyle(color: Colors.black,),
+                                                    // maxLength: maxLength,
+                                                    controller: controller,
+                                                    validator: (value) {
+                                                      if (value!.isEmpty) {
+                                                        return "Please Enter a valid text";
+                                                      }
+                                                      return null;
+                                                    },
+                                                    //controller: _controller,
+                                                    maxLines: 1,
+                                                    //onChanged: onChange,
+                                                    keyboardType:
+                                                        TextInputType.text,
+                                                    decoration: InputDecoration(
+                                                      hintText:
+                                                          "What'd you like to eat today?",
+                                                      focusedBorder:
+                                                          InputBorder.none,
+                                                      enabledBorder:
+                                                          InputBorder.none,
+                                                      errorBorder:
+                                                          InputBorder.none,
+                                                      disabledBorder:
+                                                          InputBorder.none,
+                                                      errorStyle: TextStyle(
+                                                          color: Theme.of(context)
+                                                              .accentColor,
+                                                          fontWeight:
+                                                              FontWeight.w500),
+                                                      fillColor: Colors.black,
+                                                    )),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 3,
+                                      child: SizedBox(
+                                        height: Responsive.height(context, 9),
+                                        child: ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    settings: RouteSettings(name: 'SearchRestaurant',),
+                                                    builder: (_) => StreamProvider<List<RestaurantModel>?>.value(
+                                                        initialData: null,
+                                                        value: DatabaseService().getLiveRestaurant,
+                                                        child: SearchRestaurant(mCityList: mCityList,user: user,searchText: controller.text,))));
+                                          },
+                                          child: Text(
+                                            "Let's Go",
+                                            style: TextStyle(fontSize: 25),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                          style: ButtonStyle(
+                                              backgroundColor:
+                                                  MyColors.materialColor(
+                                                      Colors.amber),
+                                              foregroundColor:
+                                                  MyColors.materialColor(
+                                                      Colors.white)),
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: Dimensions.getHeight(2),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            SizedBox(
-              height: 80,
-            ),
-            Center(
-              child: Text(
-                'Your everyday, right away',
-                style: TextStyle(fontSize: 40, fontWeight: FontWeight.w600),
+              SizedBox(
+                height: 80,
               ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Center(
-              child: Text(
-                "Order food and grocery delivery online from hundreds of \n restaurants and shops nearby.",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
+              Center(
+                child: Text(
+                  'Your everyday, right away',
+                  style: TextStyle(fontSize: 40, fontWeight: FontWeight.w600),
+                ),
               ),
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            Center(
-              child: Image.asset('assets/images/download.png'),
-            ),
+              SizedBox(
+                height: 10,
+              ),
+              Center(
+                child: Text(
+                  "Order food and grocery delivery online from hundreds of \n restaurants and shops nearby.",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
+                ),
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              Center(
+                child: Image.asset('assets/images/download.png'),
+              ),
 
-            SizedBox(
-              height: 80,
-            ),
-          ],
+              SizedBox(
+                height: 80,
+              ),
+            ],
+          ),
         ),
       ),
     );

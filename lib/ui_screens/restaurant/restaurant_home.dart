@@ -5,6 +5,7 @@ import 'package:resapp/models/db_model.dart';
 import 'package:resapp/server/auth.dart';
 import 'package:resapp/server/database_api.dart';
 import 'package:resapp/ui_screens/admin/manage_restaurant.dart';
+import 'package:resapp/ui_screens/restaurant/reports.dart';
 import 'package:resapp/ui_widget/drawer_items.dart';
 import 'package:resapp/ui_widget/top_sheet.dart';
 import 'package:resapp/utils/dimensions.dart';
@@ -27,30 +28,30 @@ class _HomeRestaurantState extends State<HomeRestaurant> {
   late List<Widget> restaurantWidgets;
   RestaurantModel? restaurant;
 
-
   @override
   void initState() {
     super.initState();
-     restaurantWidgets = [MyOrdersScreen(widget.user.restaurantId!),StreamProvider<List<CategoryModel>?>.value(
-         initialData: null,
-         value: DatabaseService().getLiveCategories, child: FoodItemsScreen(widget.user.restaurantId!))];
-
+    restaurantWidgets = [
+      MyOrdersScreen(widget.user.restaurantId!),
+      StreamProvider<List<CategoryModel>?>.value(
+          initialData: null,
+          value: DatabaseService().getLiveCategories,
+          child: FoodItemsScreen(widget.user.restaurantId!))
+    ];
   }
-
 
   @override
   Widget build(BuildContext context) {
-
     final snapshot = Provider.of<DocumentSnapshot?>(context);
 
-    if(snapshot!=null){
+    if (snapshot != null) {
       restaurant = RestaurantModel.fromJson(snapshot.data()!);
       print('9999999999999 ${restaurant!.keyWords}');
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(_currentPage==0?'My Orders':'Food Items'),
+        title: Text(_currentPage == 0 ? 'My Orders' : 'Food Items'),
         leading: GestureDetector(
           onTap: () => TopSheet.instance.showTopSheet(
               context,
@@ -98,10 +99,9 @@ class _HomeRestaurantState extends State<HomeRestaurant> {
                               DrawerItem(
                                   'assets/images/scooter.png', 'View Orders',
                                   () {
-                                    setState(() {
-                                      _currentPage =0;
-
-                                    });
+                                setState(() {
+                                  _currentPage = 0;
+                                });
                                 TopSheet.instance.hideTopSheet();
                               }),
                               Spacer(),
@@ -110,7 +110,8 @@ class _HomeRestaurantState extends State<HomeRestaurant> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (_) => ProfileScreen(widget.user)));
+                                        builder: (_) =>
+                                            ProfileScreen(widget.user)));
                               }),
                             ],
                           ),
@@ -127,32 +128,61 @@ class _HomeRestaurantState extends State<HomeRestaurant> {
                               DrawerItem(
                                   'assets/images/fooditems.png', 'Food Items',
                                   () {
-                                    setState(() {
-                                      _currentPage =1;
-
-                                    });
+                                setState(() {
+                                  _currentPage = 1;
+                                });
                                 TopSheet.instance.hideTopSheet();
                               }),
                               Spacer(),
                               DrawerItem(
-                                  'assets/images/application.png', 'Edit',
-                                      () {
-
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (_) => MultiProvider(providers: [
-                                                  StreamProvider<List<CityModel>?>.value(
+                                  'assets/images/application.png', 'Edit', () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (_) => MultiProvider(
+                                                providers: [
+                                                  StreamProvider<
+                                                      List<CityModel>?>.value(
                                                     initialData: null,
-                                                    value: DatabaseService().getLiveCities,
+                                                    value: DatabaseService()
+                                                        .getLiveCities,
                                                   ),
-                                                  StreamProvider<List<CategoryModel>?>.value(
+                                                  StreamProvider<
+                                                      List<
+                                                          CategoryModel>?>.value(
                                                     initialData: null,
-                                                    value: DatabaseService().getLiveCategories,
+                                                    value: DatabaseService()
+                                                        .getLiveCategories,
                                                   ),
-                                                ], child: AddEditRestaurantScreen(editRestaurant: restaurant))));
-                                  }),
-
+                                                ],
+                                                child: AddEditRestaurantScreen(
+                                                    editRestaurant:
+                                                        restaurant))));
+                              }),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: Dimensions.getHeight(3),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              vertical: Dimensions.getHeight(0),
+                              horizontal: Dimensions.getWidth(15)),
+                          child: Row(
+                            children: [
+                              DrawerItem('assets/images/report.png', 'Report',
+                                  () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (_) =>
+                                            StreamProvider<ReportModel?>.value(
+                                                initialData: null,
+                                                value: DatabaseService().getLiveReport(widget.user.restaurantId!),
+                                                child: ReportScreen())));
+                              }),
+                              Spacer(),
                             ],
                           ),
                         ),
@@ -165,7 +195,7 @@ class _HomeRestaurantState extends State<HomeRestaurant> {
           child: Icon(Icons.dashboard),
         ),
       ),
-      body: restaurantWidgets[_currentPage] ,
+      body: restaurantWidgets[_currentPage],
     );
   }
 }

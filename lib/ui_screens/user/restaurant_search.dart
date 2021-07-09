@@ -5,16 +5,18 @@ import 'package:resapp/models/db_model.dart';
 import 'package:resapp/server/database_api.dart';
 import 'package:resapp/ui_widget/appbar_search.dart';
 import 'package:resapp/ui_widget/user/home/resturant_near.dart';
+import 'package:resapp/ui_widget/user/home/web_appbar.dart';
 import 'package:resapp/utils/responsive.dart';
 import 'package:resapp/utils/utils.dart';
 
 class SearchRestaurant extends StatelessWidget {
   final List<RestaurantModel>? restaurantList;
-
   final List<CityModel>? mCityList;
+  final UserModel? user;
+  final String? searchText;
 
-  SearchRestaurant({this.restaurantList, this.mCityList});
 
+  SearchRestaurant({this.restaurantList, this.mCityList,this.user ,this.searchText});
   @override
   Widget build(BuildContext context) {
     List<RestaurantModel>? resList = restaurantList == null
@@ -29,43 +31,53 @@ class SearchRestaurant extends StatelessWidget {
                   initialData: null,
                   value: DatabaseService().getLiveCategories,
                   child: UserMobSearch(resList, mCityList!)),
-              tablet: UserWebSearch(),
-              desktop: UserWebSearch())
+              tablet: UserWebSearch(resList, mCityList!,user,searchText: searchText,),
+              desktop: UserWebSearch(resList, mCityList!,user,searchText: searchText,))
           : SizedBox(),
     );
   }
 }
-
 class UserWebSearch extends StatelessWidget {
+  final List<RestaurantModel> restaurantList,searchList =[];
+  final List<CityModel> mCityList;
+  final UserModel? user;
+  final String? searchText;
+
+  UserWebSearch(this.restaurantList, this.mCityList,this.user, {this.searchText});
   @override
   Widget build(BuildContext context) {
+
+    if(searchText!=null){
+      restaurantList.forEach((res) {
+        if (res.name!.toLowerCase().contains(searchText!.toLowerCase()))
+          searchList.add(res);
+      });
+    }
+
+
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(
+      body: Scrollbar(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [],
+          children: [
+            WebAppBar(user!),
+            Expanded(child: RestaurantList(restaurantList: searchList, mCityList: mCityList, count: 0))],
         ),
       ),
     );
   }
 }
-
 class UserMobSearch extends StatefulWidget {
   final List<RestaurantModel> restaurantList;
-
   final List<CityModel> mCityList;
-
   UserMobSearch(this.restaurantList, this.mCityList);
-
   @override
   _UserMobSearchState createState() => _UserMobSearchState();
 }
-
 class _UserMobSearchState extends State<UserMobSearch> {
   String searchText = '';
   final List<RestaurantModel> searchList = [];
-
   @override
   void initState() {
     super.initState();

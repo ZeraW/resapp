@@ -491,3 +491,35 @@ class AddressModel {
     return data;
   }
 }
+
+class ReportModel {
+  final String? id;
+  Map<String, int>? report;
+
+  ReportModel({this.id, this.report});
+
+  List<ReportModel> fromQuery(QuerySnapshot snapshot) {
+    return snapshot.docs.map((doc) {
+      return ReportModel(
+        id: doc.data()['id'] ?? '',
+        report: doc.data()['report'] != null
+            ? Map<String, int>.from(doc.data()['report'])
+            : {},
+      );
+    }).toList();
+  }
+
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['report'] = this.report;
+    return data;
+  }
+
+  ReportModel.fromJson(Map<String, dynamic> json)
+      : id = json['id'],
+        report = json['report'] != null
+            ? Map<String, int>.from(json['report'])
+            : {};
+}

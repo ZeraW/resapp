@@ -9,6 +9,7 @@ import 'package:resapp/ui_screens/restaurant/food_items.dart';
 import 'package:resapp/ui_screens/user/user_address.dart';
 import 'package:resapp/ui_widget/restaurant/restaurant_items.dart';
 import 'package:resapp/ui_widget/show_cart.dart';
+import 'package:resapp/utils/responsive.dart';
 import 'package:resapp/utils/utils.dart';
 
 class UserCart extends StatefulWidget {
@@ -82,7 +83,7 @@ class CartList extends StatelessWidget {
                 placeHolderForPrice = food.price![0];
               }
               return Padding(
-                padding: EdgeInsets.symmetric(vertical: 10),
+                padding: EdgeInsets.symmetric(vertical: 10,horizontal: Responsive.isDesktop()?250:0),
                 child: StatefulBuilder(builder: (context, setState) {
                   return RestaurantMenuItem(
                     title: '${food.name!}',
@@ -114,16 +115,19 @@ class CartList extends StatelessWidget {
         : SizedBox();
   }
   void placeOrder(CartModel cart,BuildContext context) async{
-    OrderModel newOrder = OrderModel(
-      totalCount: cart.totalCount,
-      totalPrice: cart.totalPrice,
-      cart: cart.cart,
-      keyWords: getKeyWords(cart.cart!),
-      orderStatus: getOrderStatus(cart.cart!),
-      restaurantCart: getRestaurantCart(cart)
-    );
+    if(cart.totalPrice!=null && cart.totalPrice!>0){
+      OrderModel newOrder = OrderModel(
+          totalCount: cart.totalCount,
+          totalPrice: cart.totalPrice,
+          cart: cart.cart,
+          keyWords: getKeyWords(cart.cart!),
+          orderStatus: getOrderStatus(cart.cart!),
+          restaurantCart: getRestaurantCart(cart)
+      );
 
-    Navigator.push(context, MaterialPageRoute(builder: (_) => UserAddress(newOrder)));
+      Navigator.push(context, MaterialPageRoute(builder: (_) => UserAddress(newOrder)));
+    }
+
     /*await DatabaseService().addOrder(newOrder: newOrder).then((value) async{
       await DatabaseService().deleteCart();
     });*/

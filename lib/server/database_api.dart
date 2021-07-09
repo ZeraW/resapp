@@ -1,10 +1,12 @@
 import 'dart:io';
-
+import 'package:date_time_picker/date_time_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:resapp/wrapper.dart';
+import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 import '../models/db_model.dart';
 
@@ -18,6 +20,8 @@ class DatabaseService {
       FirebaseFirestore.instance.collection('Category');
   final CollectionReference citiesCollection =
       FirebaseFirestore.instance.collection('Cities');
+  final CollectionReference reportCollection =
+  FirebaseFirestore.instance.collection('Report');
   final CollectionReference foodCollection =
       FirebaseFirestore.instance.collection('Food');
   final CollectionReference cartCollection =
@@ -54,20 +58,6 @@ class DatabaseService {
         firebase_storage.FirebaseStorage.instance.ref('images/$id.png');
 
     firebase_storage.UploadTask task = ref.putFile(file);
-
-    /*task.snapshotEvents.listen((firebase_storage.TaskSnapshot snapshot) {
-      print('Task state: ${snapshot.state}');
-      print(
-          'Progress: ${(snapshot.bytesTransferred / snapshot.totalBytes) * 100} %');
-    }, onError: (e) {
-      // The final snapshot is also available on the task via `.snapshot`,
-      // this can include 2 additional states, `TaskState.error` & `TaskState.canceled`
-      print(task.snapshot);
-
-      if (e.code == 'permission-denied') {
-        print('User does not have permission to upload to this reference.');
-      }
-    });*/
 
     // We can still optionally use the Future alongside the stream.
     try {
@@ -438,5 +428,46 @@ class DatabaseService {
   }
 
   /// //////////////////////////////// ADDRESS ///////////////////////////////////
+
+  /////////////////////////////////// Report ///////////////////////////////////
+
+  Future updateResReport({required int price,required String resId}) async {
+
+    DateTime dateTime = DateTime.now();
+    String currentMonth = ('${dateTime.year}-${dateTime.month}');
+    print(currentMonth.toString());
+
+    var ref = reportCollection.doc(resId);
+    ref.get().then((value) {
+      if (value.exists) {
+        return ref.update({
+          'report.profits in:$currentMonth': FieldValue.increment(price),
+          'report.orders count in:$currentMonth': FieldValue.increment(1),
+          'report.priceTotal': FieldValue.increment(price),
+          'report.countTotal': FieldValue.increment(1)
+        });
+      } else {
+        ReportModel newReport = ReportModel(id: resId, report: {
+          'profits in:$currentMonth': price,
+          'orders count in:$currentMonth': 1,
+          'priceTotal': price,
+          'countTotal': 1,
+        });
+        return ref.set(newReport.toJson());
+      }
+    });
+  }
+  // stream reports
+  Stream<ReportModel> getLiveReport(String resId) {
+    return reportCollection
+        .doc(resId)
+        .snapshots()
+        .map((event) => ReportModel.fromJson(event.data()!));
+  }
+
+
+
+
+/////////////////////////////////// Report ///////////////////////////////////
 
 }

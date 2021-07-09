@@ -20,11 +20,11 @@ class _UserOrdersState extends State<UserOrders> {
     TextStyle selectedStyle = TextStyle(
         color: Colors.white,
         fontWeight: FontWeight.w600,
-        fontSize: Responsive.width(context, 4.5));
+        fontSize: 25);
     TextStyle unSelectedStyle = TextStyle(
         color: Colors.white60,
         fontWeight: FontWeight.w600,
-        fontSize: Responsive.width(context, 4.0));
+        fontSize: 20);
     return Scaffold(
       appBar: AppBar(
         title: Text('MY ORDERS'),
