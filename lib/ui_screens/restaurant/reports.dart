@@ -64,8 +64,8 @@ class ReportScreen extends StatelessWidget {
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600,color: Colors.white),
                   ),
                 ),
-                Card(
-                  child: Expanded(
+                Expanded(
+                  child: Card(
                     child: ListView.builder(
                       padding: EdgeInsets.symmetric(
                           horizontal: Dimensions.getWidth(2),
