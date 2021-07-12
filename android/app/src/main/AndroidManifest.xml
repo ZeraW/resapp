@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.resapp">
    <application
-        android:label="resapp"
+        android:label="Order-GO"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

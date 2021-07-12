@@ -146,9 +146,9 @@ class CategoryCard extends StatelessWidget {
 class RestaurantCard extends StatelessWidget {
   String? title,phone;
   String image;
-  Function()? edit,delete,manage;
+  Function()? report,edit,delete,manage;
   Key? key;
-  RestaurantCard({this.title,required this.image,this.phone, this.key,this.manage, this.edit,this.delete});
+  RestaurantCard({this.title,required this.image,this.phone, this.report,this.key,this.manage, this.edit,this.delete});
 
   @override
   Widget build(BuildContext context) {
@@ -173,6 +173,8 @@ class RestaurantCard extends StatelessWidget {
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
+                GestureDetector(onTap: report, child: Icon(Icons.article_outlined,color: Colors.blue,size: Dimensions.getWidth(6),)),
+                SizedBox(width: Dimensions.getWidth(3),),
                 GestureDetector(onTap: edit, child: Icon(Icons.edit,color: Colors.green,size: Dimensions.getWidth(6),)),
                 SizedBox(width: Dimensions.getWidth(3),),
                 GestureDetector(onTap: delete, child: Icon(Icons.delete_outline_outlined,color: Colors.redAccent,size: Dimensions.getWidth(6),)),

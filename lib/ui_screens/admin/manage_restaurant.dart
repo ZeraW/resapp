@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:resapp/models/db_model.dart';
 import 'package:resapp/server/database_api.dart';
+import 'package:resapp/ui_screens/restaurant/reports.dart';
 import 'package:resapp/ui_widget/admin/home/admin_card.dart';
 import 'package:resapp/ui_widget/drop_down.dart';
 import 'package:resapp/ui_widget/my_card.dart';
@@ -56,6 +57,16 @@ class ManageRestaurantScreen extends StatelessWidget {
                               },phone: item.phone!,
                               title: item.name!,
                               image: item.image!,
+                      report: (){
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) =>
+                                StreamProvider<ReportModel?>.value(
+                                    initialData: null,
+                                    value: DatabaseService().getLiveReport(item.id!),
+                                    child: ReportScreen())));
+                      },
                               delete: () async {
                                 await DatabaseService()
                                     .deleteRestaurant(deleteRestaurant: item);
